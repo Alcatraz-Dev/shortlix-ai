@@ -1,5 +1,6 @@
-'use client';
-import React, { useEffect, useMemo } from "react";
+"use client";
+import { Switch } from "@/components/ui/switch";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AbsoluteFill,
   Audio,
@@ -18,6 +19,8 @@ function RemotionVideo({
 }) {
   const { fps } = useVideoConfig();
   const frame = useCurrentFrame();
+  // State to manage the visibility of captions
+  const [showCaptions, setShowCaptions] = useState(true); // Default is to show captions
 
   // Determine total video duration based on captions
   const totalVideoDurationInSeconds =
@@ -56,7 +59,6 @@ function RemotionVideo({
           const startTime = idx * framePerImage; // Start time for each image
           const endTime = startTime + framePerImage; // End time for each image
 
-
           // Randomly select a transition component for the current image
           // Calculate the scale value for zoom in and zoom out
           const scale = interpolate(
@@ -89,20 +91,31 @@ function RemotionVideo({
                     // opacity, // Apply opacity for fade effect
                     transition: "transform 0.5s ease", // Smooth scaling transition
                   }}
-                
-             
                 />
-                <AbsoluteFill className="w-full h-full justify-center items-center bottom-12 pt-[80%]">
-                  <h2 className="text-white text-2xl justify-center items-center text-center font-bold drop-shadow-[2px_2px_3px_rgba(0,0,0,1)]">
-                    {getCurrentCaptions}
-                  </h2>
-                </AbsoluteFill>
+                {showCaptions && ( // Conditional rendering of captions based on the switch state
+                  <AbsoluteFill className="w-full h-full justify-center items-center bottom-12 pt-[80%]">
+                    <h2 className="text-white text-2xl justify-center items-center text-center font-bold drop-shadow-[2px_2px_3px_rgba(0,0,0,1)]">
+                      {getCurrentCaptions}
+                    </h2>
+                  </AbsoluteFill>
+                )}
               </Sequence>
             );
           }
           return null; // Do not render any images that are not the current one
         })}
         <Audio src={audioFileUrl} />
+        {/* Toggle Switch for Showing/Hiding Captions */}
+        <div className="absolute top-4 right-4 z-50 flex items-center">
+          <Switch
+            checked={showCaptions}
+            onCheckedChange={setShowCaptions}
+            className="bg-gray-800 rounded-md w-8 h-4" // Smaller width and height for the switch
+          />
+          <span className="ml-2 text-white font-bold text-xs drop-shadow-xl">
+            {showCaptions ? "Hide" : "Show"} Captions
+          </span>
+        </div>
       </AbsoluteFill>
     )
   );

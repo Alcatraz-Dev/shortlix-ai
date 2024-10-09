@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { db } from "configs/db";
@@ -64,17 +64,15 @@ function PlayerDialog({ playVideo, videoId }) {
           {loading ? (
             <span className="text-center">Loading video data...</span>
           ) : (
-            <DialogTitle  className="flex text-center text-xl font-bold my-5 ml-14">
-           
-                {videoData
-                  ? "Your video is ready!"
-                  : "Your video is not found!"}
-             
+            <DialogTitle className="flex text-center text-xl font-bold my-5 ml-14">
+              {videoData ? "Your video is ready!" : "Your video is not found!"}
             </DialogTitle>
           )}
           <DialogDescription className="w-full h-full">
             {loading ? (
-              <span className=" flex items-center justify-center text-center">Loading video data...</span>
+              <span className=" flex items-center justify-center text-center">
+                Loading video data...
+              </span>
             ) : videoData ? (
               <>
                 <Player
@@ -105,6 +103,7 @@ function PlayerDialog({ playVideo, videoId }) {
                     Cancel
                   </Button>
                   <Button onClick={expoertVideo}>Export</Button>
+                 
                 </div>
               </>
             ) : (
