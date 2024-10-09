@@ -1,0 +1,74 @@
+name: Remotion Build and Test
+
+# This workflow runs whenever code is pushed to the repository or a pull request is created.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+# Define the jobs for this workflow
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x] # Adjust this based on your Node.js version
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Cache npm dependencies
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run build command (adjust if you have a different build command)
+      - name: Build project
+        run: npm run build
+
+      # Run tests (optional, add your test scripts here)
+      - name: Run tests
+        run: npm run test
+
+  # Optional job for video rendering (Remotion CLI commands)
+  render-video:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Render Remotion video (adjust paths as needed)
+      - name: Render video
+        run: npx remotion render remotion/index.jsx Empty output/video.mp4
