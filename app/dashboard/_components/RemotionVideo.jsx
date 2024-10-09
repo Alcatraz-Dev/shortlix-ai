@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useMemo } from "react";
 import {
   AbsoluteFill,
@@ -8,7 +9,6 @@ import {
   useVideoConfig,
   interpolate,
 } from "remotion";
-
 function RemotionVideo({
   script,
   imageList = [],
@@ -33,67 +33,74 @@ function RemotionVideo({
 
   const framePerImage =
     imageList.length > 0
-      ? totalDurationInFrames / (imageList.length + 1) // Add 1 for smooth transition
+      ? totalDurationInFrames / imageList.length // Divide total frames by number of images
       : totalDurationInFrames;
+
+  // Determine the index of the current image based on the current frame
+  const currentImageIndex = Math.floor(frame / framePerImage);
 
   // Memoizing current captions
   const getCurrentCaptions = useMemo(() => {
-    const currentTime = (frame / fps) * 1000;
+    const currentTime = (frame / fps) * 1000; // Current time in milliseconds
     return (
       captions.find(
-        (word) => currentTime >= word.start && currentTime <= word.end
+        (word) => currentTime >= word.start && currentTime < word.end // Ensure current time is within start and end
       )?.text || ""
     );
   }, [frame, fps, captions]);
 
-  // Function to open Remotion Studio
-
   return (
     script && (
       <AbsoluteFill className="bg-black rounded-xl">
-        {imageList?.map((item, idx) => {
+        {imageList.map((item, idx) => {
           const startTime = idx * framePerImage; // Start time for each image
-          const duration = framePerImage; // Duration for each image
-          const endTime = startTime + duration; // End time for each image
+          const endTime = startTime + framePerImage; // End time for each image
 
+
+          // Randomly select a transition component for the current image
           // Calculate the scale value for zoom in and zoom out
           const scale = interpolate(
             frame,
-            [startTime, startTime + duration / 2, endTime],
-            [1, 1.8, 1]
+            [startTime, startTime + framePerImage / 2, endTime],
+            [1, 1.5, 1]
           );
 
-          // Calculate the opacity for the fade effect
-          const opacity = interpolate(
-            frame,
-            [startTime, startTime + duration / 2, endTime - 5, endTime],
-            [1, 1, 0, 0] // Fade out at the end of the image display
-          );
+          // // Calculate the opacity for the fade effect
+          // const opacity = interpolate(
+          //   frame,
+          //   [startTime, startTime + 2, endTime -0.5, endTime],
+          //   [1, 1, 0, 0] // Fade out faster and over a shorter period
+          // );
 
-          return (
-            
-            <Sequence
-              key={idx}
-              from={startTime}
-              durationInFrames={duration + 10} // Slightly extend the duration for overlap
-            >
-              <Img
-                src={item}
-                alt={`Image ${idx + 1}`} // Accessibility improvement
-                className="w-full h-full object-cover"
-                style={{
-                  transform: `scale(${scale})`,
-                  opacity, // Apply opacity for fade effect
-                  transition: "transform 0.5s ease", // Smooth scaling transition
-                }}
-              />
-              <AbsoluteFill className="w-full h-full justify-center items-center bottom-12 pt-[80%]">
-                <h2 className="text-white text-2xl justify-center items-center text-center font-bold drop-shadow-[2px_2px_3px_rgba(0,0,0,1)]">
-                  {getCurrentCaptions}
-                </h2>
-              </AbsoluteFill>
-            </Sequence>
-          );
+          // Only render the current image based on the calculated index
+          if (idx === currentImageIndex) {
+            return (
+              <Sequence
+                key={idx}
+                from={startTime}
+                durationInFrames={framePerImage + 20} // Extend the duration for overlap
+              >
+                <Img
+                  src={item}
+                  alt={item?.id}
+                  className="w-full h-full object-cover"
+                  style={{
+                    // transform: `scale(${scale})`,
+                    // opacity, // Apply opacity for fade effect
+                    transition: "transform 0.5s ease", // Smooth scaling transition
+                  }}
+                
+             
+                />
+                <AbsoluteFill className="w-full h-full justify-center items-center bottom-12 pt-[80%]">
+                  <h2 className="text-white text-2xl justify-center items-center text-center font-bold drop-shadow-[2px_2px_3px_rgba(0,0,0,1)]">
+                    {getCurrentCaptions}
+                  </h2>
+                </AbsoluteFill>
+              </Sequence>
+            );
+          }
+          return null; // Do not render any images that are not the current one
         })}
         <Audio src={audioFileUrl} />
       </AbsoluteFill>

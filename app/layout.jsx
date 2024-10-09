@@ -25,13 +25,13 @@ export default function RootLayout({ children }) {
       <html lang="en" suppressHydrationWarning>
         <body
           className={cn(
-            "antialiased dark:bg-neutral-800 dark:text-neutral-100 bg-neutral-100 text-neutral-800",
+            "antialiased dark:bg-neutral-800 dark:text-neutral-100 ",
             outfit.className
           )}
         >
           <ThemeProvider
             attribute="class"
-            defaultTheme="class"
+            defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
