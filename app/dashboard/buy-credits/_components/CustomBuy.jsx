@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import VisuallyHidden from "app/VisuallyHidden";
@@ -55,9 +56,9 @@ function CustomBuy({
     <Dialog open={isSelected} onOpenChange={() => setIsSelected(!isSelected)}>
       <DialogContent className="bg-slate-50 text-black border-primary rounded-md mx-auto py-5 w-full max-w-lg">
         <DialogHeader>
-          <VisuallyHidden >
-            <h2 className="text-black font-bold text-2xl">{title}</h2>
-            </VisuallyHidden>
+          <DialogTitle className="text-black font-bold text-2xl" >
+            {title}
+            </DialogTitle>
           <DialogDescription className="text-gray-600 font-semibold">
             {message}
           </DialogDescription>

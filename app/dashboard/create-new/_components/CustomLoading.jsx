@@ -11,14 +11,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Loader } from "lucide-react";
-import VisuallyHidden from "app/VisuallyHidden";
 
-function CustomLoading({ loading,title , message }) {
+
+function CustomLoading({ loading, title, message }) {
   return (
-    <AlertDialog open={loading} >
+    <AlertDialog open={loading}>
       <AlertDialogContent className="bg-neutral-800 border-primary rounded-md">
         <AlertDialogHeader>
-          <VisuallyHidden><h2>Your {title} is being generated !</h2></VisuallyHidden>
+          <AlertDialogTitle>Your {title} is being generated !</AlertDialogTitle>
           <AlertDialogDescription>
             Please hold tight while we process your request. This might take a
             few moments, but the result will be worth the wait !

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { db } from "configs/db";
@@ -13,8 +14,8 @@ import { eq } from "drizzle-orm";
 import { useRouter } from "next/navigation";
 import RemotionVideo from "./RemotionVideo"; // Keep this for rendering
 import { Player } from "@remotion/player"; // Still needed for rendering
-import VisuallyHidden from "app/VisuallyHidden";
 import { toast } from "sonner";
+
 
 function PlayerDialog({ playVideo, videoId }) {
   const [openDialog, setOpenDialog] = useState(false);
@@ -63,17 +64,17 @@ function PlayerDialog({ playVideo, videoId }) {
           {loading ? (
             <span className="text-center">Loading video data...</span>
           ) : (
-            <VisuallyHidden>
-              <h2 className="flex text-center text-xl font-bold my-5 ml-14">
+            <DialogTitle  className="flex text-center text-xl font-bold my-5 ml-14">
+           
                 {videoData
                   ? "Your video is ready!"
                   : "Your video is not found!"}
-              </h2>
-            </VisuallyHidden>
+             
+            </DialogTitle>
           )}
           <DialogDescription className="w-full h-full">
             {loading ? (
-              <span className="text-center">Loading video data...</span>
+              <span className=" flex items-center justify-center text-center">Loading video data...</span>
             ) : videoData ? (
               <>
                 <Player

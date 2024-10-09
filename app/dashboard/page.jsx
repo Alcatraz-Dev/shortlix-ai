@@ -20,7 +20,8 @@ function Dashboard() {
     const result = await db
       .select()
       .from(VideoData)
-      .where(eq(VideoData.createBy, user?.primaryEmailAddress?.emailAddress));
+      .where(eq(VideoData.createBy, user?.primaryEmailAddress?.emailAddress))
+      .orderBy(VideoData.id, "desc"); // Order by 'id' in descending order
     console.log(result);
     setVideoList(result);
   };
@@ -29,19 +30,23 @@ function Dashboard() {
       <div className="flex items-center justify-between">
         <h2 className="font-bold text-3xl text-primary ">Dashboard</h2>
         <Link href={"/dashboard/create-new"}>
-        <Button className="font-bold">+ Create New </Button>
+          <Button className="font-bold">+ Create New </Button>
         </Link>
       </div>
       {/* Empty State */}
       <div>
         {videoList?.length === 0 ? (
           <div className="flex justify-center items-center">
-            <EmptyState title={"video"} message={"video"} buttonTitle={" new video"} />
+            <EmptyState
+              title={"video"}
+              message={"video"}
+              buttonTitle={" new video"}
+            />
           </div>
         ) : (
           // Video List
-          <div className="flex items-center" >
-          <VideoList videoList={videoList} />
+          <div className="flex items-center">
+            <VideoList videoList={videoList} />
           </div>
         )}
       </div>

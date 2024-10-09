@@ -35,7 +35,7 @@ function SelectVoice({ onUserSelect }) {
   const handleSubmit = async () => {
     setIsGeneratingVoice(true);
     const textToConvert =
-      selectedOption === "Custom Text" ? customText : defaultText;
+      selectedOption === "Custom Text" || "Custom Prompt" ? customText : defaultText;
 
     if (!textToConvert) return;
 

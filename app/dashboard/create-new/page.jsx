@@ -52,7 +52,8 @@ function CreateNew() {
   const getVideoScript = async () => {
     setIsGeneratingScript(true);
     // const prompt = `write a script to generate ${formData.duration} video on topic: ${formData.topic} along with AI image prompt in ${formData.imageStyle} format for each scene and give me result in JSON format with imagePrompt and ContentText as field . Each image prompt should evoke strong imagery, with attention to colors, composition, and mood.`;
-     const prompt = `Create a compelling script for a ${formData.duration} video on the topic: "${formData.topic}". For each scene, provide a detailed description of the visuals that should accompany the script. Specify the style as ${formData.imageStyle}, ensuring the image prompts capture the essence and tone of the script. The output should be in JSON format, with fields for 'imagePrompt' and 'ContentText'. Each image prompt should evoke strong imagery, with attention to colors, composition, and mood.`;
+    const prompt = `Create a compelling script for a ${formData.duration} video on the topic: "${formData.topic}". For each scene, provide a detailed description of the visuals that should accompany the script. Specify the style as ${formData.imageStyle}, ensuring the image prompts capture the essence and tone of the script. The script language should be in ${formData.voiceLanguage} and have a grandeur level of ${formData.voiceGender}. The output should be in JSON format, with fields for 'imagePrompt' and 'ContentText'. Each image prompt should evoke strong imagery, with attention to colors, composition, and mood.`;
+    // const prompt = `Create a compelling script for a ${formData.duration} video on the topic: "${formData.topic}". For each scene, provide a detailed description of the visuals that should accompany the script. Specify the style as ${formData.imageStyle}, ensuring the image prompts capture the essence and tone of the script. The voiceover should be in ${formData.voiceLanguage} and have a grandeur level of ${formData.voiceGender}. The output should be in JSON format, with fields for 'imagePrompt' and 'ContentText'. Each image prompt should evoke strong imagery, with attention to colors, composition, and mood.`;
     const result = await axios.post("/api/get-video-script", {
       prompt: prompt,
     });
@@ -108,6 +109,7 @@ function CreateNew() {
     setIsGeneratingCaptions(true);
     const result = await axios.post("/api/generate-caption", {
       audioFileUrl: fileUrl,
+      language_code: formData?.voiceLanguage,
     });
     if (result?.data?.result) {
       console.log("Audio File URL before generating captions:", audioFileUrl);
